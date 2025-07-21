@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    <paths>-->
+    <!--        <external-path-->
+    <!--            name="data_storage"-->
+    <!--            path="" />-->
+    <!--    </paths>-->
+
+    <paths xmlns:android="http://schemas.android.com/apk/res/android">
+        <files-path name="my_files" path="." />
+        <!-- 其他路径，如 external-files-path, external-cache-path 等 -->
+    </paths>
+
+</resources>

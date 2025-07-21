@@ -1,0 +1,12 @@
+build/
+.dart_tool/
+.DS_Store 
+.sfdx/
+
+/flutter-plugins
+/flutter-plugins-dependencies
+/flutter-tool-cache
+
+#建议保留 但当前flutter版本不一致 造成大部分依赖不统一
+/pubspec.lock
+/ios/Podfile.lock

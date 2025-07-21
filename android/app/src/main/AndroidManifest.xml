@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.eagletechz.bakeryUser">
+
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络请求权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 写入文件权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 读取文件权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 检测联网方式 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:name="${applicationName}"
+        android:icon="@mipmap/logo"
+        android:label="浅草ベーカリー">
+
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:networkSecurityConfig="@xml/network_security_config"
+            android:theme="@style/LaunchTheme"
+
+            android:windowSoftInputMode="adjustResize">
+
+            <!--
+                 Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI.
+            -->
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+<!--            <meta-data-->
+<!--                android:name="com.google.android.gms.wallet.api.enabled"-->
+<!--                android:value="true" />-->
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                        android:scheme="user"
+                        android:host="order"
+                        android:path="/completed" />
+            </intent-filter>
+
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+            <!-- 注意：android:name="android.support.FILE_PROVIDER_PATHS" 应该是 android:resource="@xml/file_paths" 的误导 -->
+        </provider>
+        <!--
+ Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+        -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/app_key" />
+    </application>
+
+</manifest>

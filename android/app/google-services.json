@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "691261026704",
+    "project_id": "asakusa-bakery-39c83",
+    "storage_bucket": "asakusa-bakery-39c83.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691261026704:android:7871145032562499a78315",
+        "android_client_info": {
+          "package_name": "com.eagletechz.bakeryUser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ93vlZ91qLqJtL_Us-wU4Em4skkGt_E0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
