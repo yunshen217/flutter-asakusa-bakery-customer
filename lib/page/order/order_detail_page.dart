@@ -381,10 +381,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                         bottom: 5)),
                                 customWidget.setRichText(
                                     "配達先：",
-                                    orderDetailModel?.prefectures +
-                                        orderDetailModel?.municipalities +
-                                        orderDetailModel?.streetAddress +
-                                        orderDetailModel?.building,
+                                    // orderDetailModel?.prefectures +
+                                    //     orderDetailModel?.municipalities +
+                                    //     orderDetailModel?.streetAddress +
+                                    //     orderDetailModel?.building,
+                                    (orderDetailModel!.prefectures??"") +
+                                        (orderDetailModel!.municipalities??"") +
+                                        (orderDetailModel!.streetAddress??"") +
+                                        (orderDetailModel!.building??""),
                                     color: CustomColor.gray_9,
                                     margin: const EdgeInsets.only(
                                         left: 15, right: 15, bottom: 5)),
