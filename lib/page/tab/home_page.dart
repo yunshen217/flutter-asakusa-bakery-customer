@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -104,13 +103,13 @@ class _HomePageState extends State<HomePage> {
   late BitmapDescriptor _myIcon;
 
   Future<void> _loadIcon() async {
-  _myIcon = await BitmapDescriptor.fromAssetImage(
-    const ImageConfiguration(size: Size(24, 24)), // 可指定显示尺寸
-    'assets/marker.png',
-  );
-  // 生成 markers
-  displayInfo();
-}
+    _myIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(24, 24)), // 可指定显示尺寸
+      'assets/marker.png',
+    );
+    // 生成 markers
+    displayInfo();
+  }
 
   displayInfo() {
     Set<Marker> markersData = {};
@@ -134,14 +133,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      backgroundColor: CustomColor.white,
+      // backgroundColor: CustomColor.white,
+      extendBodyBehindAppBar: true, // 让 body 延伸到 AppBar 背后
       appBar: customWidget.setAppBar(
           isLeftShow: false,
           isTitle: false,
+          backgroundColor: Colors.transparent,
           titleChild: customWidget.setTextFieldForLogin(controller,
               hintText: "店舗名を入力してください",
               textInputAction: TextInputAction.search,
               icon: "icon_search.png",
+              isFilled: true,
+              isHaveBorder: false,
               onTap: () {
                 if (controller!.text.trim().isNotEmpty) {
                   getData("");
@@ -159,9 +162,10 @@ class _HomePageState extends State<HomePage> {
       body: Stack(
         children: [
           GoogleMap(
+            mapType: MapType.normal,
             initialCameraPosition: const CameraPosition(
               target: LatLng(28.2096, 83.9856),
-              zoom: 7,
+              zoom: 20,
             ),
             compassEnabled: false, // 隐藏指南针
             zoomControlsEnabled: false, // 隐藏缩放按钮（+ -）
@@ -172,7 +176,25 @@ class _HomePageState extends State<HomePage> {
               infoData = {};
             }),
           ),
-          if (infoData.isNotEmpty)
+          if (infoData.isNotEmpty) ...[
+            Positioned(
+              top: 45,
+                child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                width: Get.width,
+                alignment: Alignment.center,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(30, 5, 30, 6),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: CustomColor.redE8),
+                      borderRadius: BorderRadius.circular(22),
+                      color: Colors.white),
+                  child: customWidget.setText("在该区域重新检索",
+                      color: CustomColor.redE8, fontSize: 15),
+                ),
+              ),
+            )),
             Positioned(
                 bottom: 21,
                 child: Container(
@@ -203,7 +225,8 @@ class _HomePageState extends State<HomePage> {
                                 fontWeight: FontWeight.bold),
                             customWidget.setText(infoData["subTitle"] ?? "",
                                 color: CustomColor.black_3,
-                                margin: const EdgeInsets.only(top: 5, bottom: 15)),
+                                margin:
+                                    const EdgeInsets.only(top: 5, bottom: 15)),
                             customWidget.setCupertinoButton("这是标签",
                                 fontWeight: FontWeight.normal,
                                 fontSize: 12,
@@ -217,6 +240,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ))
+          ]
         ],
       ),
     );

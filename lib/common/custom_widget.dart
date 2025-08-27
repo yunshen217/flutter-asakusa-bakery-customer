@@ -324,13 +324,15 @@ class CustomWidget {
     onSubmitted,
     onChanged,
     onTap,
+    isFilled = false,
+    isHaveBorder = true
   }) {
     var customBorder1 = OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
-        borderSide: const BorderSide(color: CustomColor.grayC5));
+        borderSide:isHaveBorder? const BorderSide(color: CustomColor.grayC5):BorderSide.none);
     var customBorder = OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
-        borderSide: const BorderSide(color: CustomColor.redE8));
+        borderSide:isHaveBorder?  const BorderSide(color: CustomColor.redE8):BorderSide.none);
     return Container(
         margin: margin,
         height: height,
@@ -352,6 +354,8 @@ class CustomWidget {
             style: setTextStyle(fontWeight: FontWeight.normal),
             onChanged: onChanged,
             decoration: InputDecoration(
+                filled: isFilled,
+                fillColor: Colors.white,
                 hintText: hintText,
                 contentPadding: const EdgeInsets.only(bottom: 5, top: 15, left: 15),
                 counter: const SizedBox(height: 0, width: 0),
