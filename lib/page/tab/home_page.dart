@@ -140,23 +140,23 @@ class _HomePageState extends State<HomePage> {
           isTitle: false,
           backgroundColor: Colors.transparent,
           titleChild: customWidget.setTextFieldForLogin(controller,
-              hintText: "店舗名を入力してください",
-              textInputAction: TextInputAction.search,
-              icon: "icon_search.png",
-              isFilled: true,
-              isHaveBorder: false,
-              onTap: () {
-                if (controller!.text.trim().isNotEmpty) {
-                  getData("");
-                }
-              },
-              onChanged: (e) => getData(e),
-              onSubmitted: (e) => getData(e)),
+            hintText: "店舗名を入力してください",
+            textInputAction: TextInputAction.search,
+            icon: "icon_search.png",
+            isFilled: true,
+            isHaveBorder: false,
+            onTap: () {
+              if (controller!.text.trim().isNotEmpty) {
+                getData("");
+              }
+            },
+            onChanged: (e) => getData(e),
+            onSubmitted: (e) => getData(e)),
           isRightShow: true,
           right: Container(
               padding:
                   const EdgeInsets.only(right: 15, bottom: 12, left: 5, top: 5),
-              child: const Icon(Icons.notifications)),
+              child: const Icon(Icons.notifications,color: CustomColor.black_3,)),
           onTap: () =>
               Routes.goPage(context, "/MessagePage", param: {'tabIndex': 0})),
       body: Stack(
@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
           ),
           if (infoData.isNotEmpty) ...[
             Positioned(
-              top: 45,
+              top: 95,
                 child: GestureDetector(
               onTap: () {},
               child: Container(

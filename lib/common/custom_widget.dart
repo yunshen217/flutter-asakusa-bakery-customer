@@ -325,14 +325,14 @@ class CustomWidget {
     onChanged,
     onTap,
     isFilled = false,
-    isHaveBorder = true
+    isHaveBorder = false
   }) {
     var customBorder1 = OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
-        borderSide:isHaveBorder? const BorderSide(color: CustomColor.grayC5):BorderSide.none);
+        borderSide:isHaveBorder? const BorderSide(color: CustomColor.grayC5): BorderSide(color: CustomColor.grayC5.withOpacity(0.2)));
     var customBorder = OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
-        borderSide:isHaveBorder?  const BorderSide(color: CustomColor.redE8):BorderSide.none);
+        borderSide:isHaveBorder?  const BorderSide(color: CustomColor.redE8):BorderSide(color: CustomColor.grayC5.withOpacity(0.2)));
     return Container(
         margin: margin,
         height: height,
@@ -362,6 +362,7 @@ class CustomWidget {
                 hintStyle: setTextStyle(
                     color: CustomColor.grayC5, fontWeight: FontWeight.normal, fontSize: 14),
                 border: customBorder1,
+                enabledBorder: customBorder1,
                 suffixIcon: suffix ??
                     IconButton(
                         splashColor: Colors.transparent,
