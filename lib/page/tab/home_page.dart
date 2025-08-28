@@ -7,7 +7,6 @@ import 'package:shopping_client/view/BaseScaffold.dart';
 
 import '../../adapter/home_adapter.dart';
 import '../../common/custom_color.dart';
-import '../../common/utils.dart';
 import '../../model/ShopDetailModel.dart';
 import '../../model/Records.dart';
 import '../../repository/repository.dart';

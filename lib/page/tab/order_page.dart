@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_client/common/InitEventBus.dart';
 import 'package:shopping_client/common/custom_widget.dart';
-import 'package:shopping_client/model/GoodModel.dart';
 import 'package:shopping_client/repository/repository.dart';
 import 'package:shopping_client/view/BaseScaffold.dart';
 
@@ -9,7 +8,6 @@ import '../../adapter/bread_list_adapter.dart';
 import '../../common/constant.dart';
 import '../../common/custom_color.dart';
 import '../../model/OrderListVo.dart';
-import '../../model/OrderListVos.dart';
 import '../../routes/Routes.dart';
 
 ///订单界面

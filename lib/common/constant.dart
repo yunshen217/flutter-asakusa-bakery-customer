@@ -45,20 +45,20 @@ class Constant {
   static const int FLAG_SEVENTEEN = 17;
 
   /// 正式
-  static var base_url = "https://app.asakusa-bakery.com/api/";
+  // static var base_url = "https://app.asakusa-bakery.com/api/";
 
-  static var web_url = "https://app.asakusa-bakery.com/";
+  // static var web_url = "https://app.asakusa-bakery.com/";
 
-  static var picture_url = "https://asakusabakery.s3.ap-northeast-1.amazonaws.com";
+  // static var picture_url = "https://asakusabakery.s3.ap-northeast-1.amazonaws.com";
 
   /// 测试环境
-  //static var base_url = "https://test.asakusa-bakery.com/api/";
-  // //static var base_url = "https://test.asakusa-bakery.com/prod-api/";
-  //static var web_url = "https://test.asakusa-bakery.com/api/";
-  // //static var web_url = "https://test.asakusa-bakery.com/";
-  // //static var picture_url = "https://test.asakusa-bakery.com/";
-  //static var picture_url =
-  //    "https://asakusa-bakery-file.s3.ap-northeast-1.amazonaws.com";
+  static var base_url = "https://test.asakusa-bakery.com/api/";
+  //static var base_url = "https://test.asakusa-bakery.com/prod-api/";
+  static var web_url = "https://test.asakusa-bakery.com/api/";
+  //static var web_url = "https://test.asakusa-bakery.com/";
+  //static var picture_url = "https://test.asakusa-bakery.com/";
+  static var picture_url =
+     "https://asakusa-bakery-file.s3.ap-northeast-1.amazonaws.com";
 
   static final homes = "${base_url}customer/merchants";
   static final resetAccountPassword = "${base_url}customer/auth/password/reset";
@@ -84,7 +84,8 @@ class Constant {
   static final psMerchantDetail = "${base_url}customer/merchants/";
   static final queryPsTimePeriod = "${base_url}customer/merchants/time-periods";
 
-  static final getRestWeekDay = "${base_url}customer/days/rest";
+  // static final getRestWeekDay = "${base_url}customer/days/rest";
+  static final getRestWeekDay = "${base_url}customer/days/calendar";
   static final getFirstAvailableDay = "${base_url}customer/days/";
   static final getRsvStopDay = "${base_url}customer/days/";
 

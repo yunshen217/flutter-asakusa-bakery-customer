@@ -2,7 +2,6 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_client/common/constant.dart';
 import 'package:shopping_client/common/custom_widget.dart';
-import 'package:shopping_client/common/utils.dart';
 import 'package:shopping_client/view/BaseScaffold.dart';
 
 import '../../common/custom_color.dart';
@@ -129,7 +128,7 @@ class _OrderDetailPageState extends State<GoodsDetailPage> {
                                     iconSize: 40,
                                     text: "エビ匹",
                                     margin: EdgeInsets.zero),
-                                
+
                               ],
                             ),
                             Row(
@@ -143,21 +142,21 @@ class _OrderDetailPageState extends State<GoodsDetailPage> {
                                     text: "力二匹",
                                     margin: EdgeInsets.zero),
                                 customWidget.setTopImgBottomText(
-                                    icon: shopDetailModel!.allergenList!.contains("5")
+                                    icon: shopDetailModel!.allergenList!.contains("6")
                                         ? "icon_six_yellow.png"
                                         : "icon_six_gray.png",
                                     iconSize: 40,
                                     text: "そば",
                                     margin: const EdgeInsets.only(left: 0, right: 0, top: 15)),
                                 customWidget.setTopImgBottomText(
-                                    icon: shopDetailModel!.allergenList!.contains("5")
+                                    icon: shopDetailModel!.allergenList!.contains("7")
                                         ? "icon_seven_yellow.png"
                                         : "icon_seven_gray.png",
                                     iconSize: 40,
                                     text: "落花生",
                                     margin: const EdgeInsets.only(left: 0, right: 0, top: 15)),
                                 customWidget.setTopImgBottomText(
-                                    icon: shopDetailModel!.allergenList!.contains("5")
+                                    icon: shopDetailModel!.allergenList!.contains("8")
                                         ? "icon_eight_yellow.png"
                                         : "icon_eight_gray.png",
                                     iconSize: 40,

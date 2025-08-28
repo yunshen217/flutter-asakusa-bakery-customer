@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shopping_client/page/order/sub_goods_page.dart';
 import 'package:shopping_client/page/order/sub_shop_page.dart';
 import 'package:shopping_client/view/BaseScaffold.dart';
-import 'package:shopping_client/repository/repository.dart';
 import '../../model/ShopDetailModel.dart';
 import '../../common/constant.dart';
 import '../../common/custom_widget.dart';

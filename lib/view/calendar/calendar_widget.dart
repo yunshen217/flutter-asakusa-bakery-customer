@@ -44,8 +44,13 @@ class CustomCalendarViewer extends StatefulWidget {
   /// - This  will take Date Model
   /// - if you leave the color or text color null this will take the colors from active color for background and active day num style for text color
   final List<Date>? dates;
+  /// day off
   final List<String>? mDates;
+  /// Non appointment days
+  final List<String>? unableDays;
   final List<String>? mOrderDates;
+  final int?minMonth;
+  final int?maxMonth;
 
   /// - Here you can add specific active ranges dates
   /// - This  will take RangeDate Model
@@ -273,6 +278,7 @@ class CustomCalendarViewer extends StatefulWidget {
     this.yearDuration = const Duration(milliseconds: 500),
     this.dates,
     this.mDates,
+    this.unableDays,
     this.mOrderDates,
     this.initDate,
     this.ranges,
@@ -352,6 +358,8 @@ class CustomCalendarViewer extends StatefulWidget {
       fontSize: 14,
     ),
     this.addDatesMargin = const EdgeInsets.only(left: 45, right: 45, top: 10, bottom: 0),
+    this.minMonth = 0,
+    this.maxMonth = 0
   });
 
   @override
@@ -544,6 +552,9 @@ class _CustomCalendarViewerState extends State<CustomCalendarViewer>
 
     void backArrow() {
       setState(() {
+        if (currentDate.month == widget.minMonth) {
+          return;
+        }
         if ((widget.calendarType == CustomCalendarType.monthsAndYears &&
                 currentDate.year - 1 >= widget.startYear) ||
             (widget.calendarType != CustomCalendarType.monthsAndYears &&
@@ -586,6 +597,9 @@ class _CustomCalendarViewerState extends State<CustomCalendarViewer>
 
     void forwardArrow() {
       setState(() {
+        if (currentDate.month == widget.maxMonth) {
+          return;
+        }
         if ((widget.calendarType == CustomCalendarType.monthsAndYears &&
                 currentDate.year + 1 <= widget.endYear) ||
             (widget.calendarType != CustomCalendarType.monthsAndYears &&
@@ -627,6 +641,10 @@ class _CustomCalendarViewerState extends State<CustomCalendarViewer>
     }
 
     void onDateTaped(int index) {
+      if(widget.unableDays!
+                            .contains(convertToArOrEnNumerals('${(index + 1) - extraDays}'))){
+                              return;
+                            }
       if (widget.mDates!.indexWhere((e) => e == "${index - extraDays + 1}") != -1) {
         return;
       }
@@ -1188,7 +1206,10 @@ class _CustomCalendarViewerState extends State<CustomCalendarViewer>
       if (tempData.isNotEmpty) {
         int tempDay = tempData.reduce(min);
         int tempMaxDay = tempData.reduce(max);
-        if (widget.mDates!.contains(input) && tempDay < day && tempMaxDay > day) {
+        // if (widget.mDates!.contains(input) && tempDay < day && tempMaxDay > day) {
+        //   return "休";
+        // }
+        if(widget.mDates!.contains(input)){
           return "休";
         }
         if (widget.mOrderDates!.isNotEmpty) {
@@ -1673,7 +1694,7 @@ class _CustomCalendarViewerState extends State<CustomCalendarViewer>
               ),
               child: Text(
                 convertToArOrEnNumerals('${(index + 1) - extraDays}'),
-                style: widget.mDates!
+                style: widget.unableDays!
                             .contains(convertToArOrEnNumerals('${(index + 1) - extraDays}')) ||
                         convertToArOrEnNumerals('${(index + 1) - extraDays}') == "休" ||
                         convertToArOrEnNumerals('${(index + 1) - extraDays}') == "満"

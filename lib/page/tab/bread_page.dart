@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:shopping_client/common/constant.dart';
@@ -9,7 +9,6 @@ import 'package:shopping_client/view/BaseScaffold.dart';
 import '../../adapter/bread_list_adapter.dart';
 import '../../common/custom_color.dart';
 import '../../model/GoodModel.dart';
-import '../../model/GoodsBreadModel.dart';
 import '../../model/GoodsModel.dart';
 import '../../model/ItemKindVos.dart';
 import '../../model/ItemKindVo.dart';
