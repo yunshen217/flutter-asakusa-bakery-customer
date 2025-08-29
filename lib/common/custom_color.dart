@@ -8,6 +8,7 @@ class CustomColor {
 
   static const Color white = Color(0xFFFFFFFF);
   static const Color black_3 = Color(0xFF333333);
+  static const Color blackD = Color(0xFFDDDDDD);
   static const Color redE8 = Color(0xFFE84F43);
   static const Color grayA = Color(0xFFAAAAAA);
   static const Color grayFa = Color(0xFFFAFAFA);

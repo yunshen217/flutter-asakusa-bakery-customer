@@ -62,6 +62,8 @@ class BackEndRepository {
     ErrorResponse? errorRequest,
     Map<String, dynamic>? params,
   }) async {
+    print("url ----------------$url");
+    print("params ----------------$params");
     try {
       Options requestOption;
       if (url == Constant.getCreditCardToken) {

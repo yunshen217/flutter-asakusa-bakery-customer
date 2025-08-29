@@ -45,6 +45,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   @override
   void initState() {
     _tabController = TabController(length: tabs.length, vsync: this);
+    accountController!.text = "1534501335@qq.com";
+    pwController!.text = "AX98Yn5tHBgyBcW";
     super.initState();
   }
 
