@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getData(merchantName) async {
     bool enabled = await Geolocator.isLocationServiceEnabled();
-    if (!enabled) return Future.error('定位服务未开启');
+    if (!enabled) return Future.error('位置情報の利用を許可しましょう現在地周辺のパン屋さんを検索できます。');
 
     // 2. 检查/请求权限
     LocationPermission p = await Geolocator.checkPermission();
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
       p = await Geolocator.requestPermission();
       if (p == LocationPermission.denied ||
           p == LocationPermission.deniedForever) {
-        return Future.error('无定位权限');
+        // return Future.error('无定位权限');
       }
     }
 
@@ -209,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                           border: Border.all(color: CustomColor.redE8),
                           borderRadius: BorderRadius.circular(22),
                           color: Colors.white),
-                      child: customWidget.setText("在该区域重新检索",
+                      child: customWidget.setText("このエリアで再検索",
                           color: CustomColor.redE8, fontSize: 15),
                     ),
                   ),
