@@ -650,8 +650,11 @@ class _CustomCalendarViewerState extends State<CustomCalendarViewer>
       }
       if (widget.mOrderDates!.isNotEmpty) {
         for (var e in widget.mOrderDates!) {
-          if (e.split("-")[1] == "${index - extraDays + 1}" &&
-              int.parse(e.split("-")[0]) == currentDate.month) {
+          // if (e.split("-")[1] == "${index - extraDays + 1}" &&
+          //     int.parse(e.split("-")[0]) == currentDate.month) {
+          //   return;
+          // }
+          if(e=="${index - extraDays + 1}" ){
             return;
           }
         }
@@ -1214,9 +1217,12 @@ class _CustomCalendarViewerState extends State<CustomCalendarViewer>
         }
         if (widget.mOrderDates!.isNotEmpty) {
           for (var e in widget.mOrderDates!) {
-            if (int.parse(e.split("-")[1]) == int.parse(input) && int.parse(e.split("-")[0]) == currentDate.month) {
+            if(int.parse(e) == int.parse(input)){
               return "満";
             }
+            // if (int.parse(e.split("-")[1]) == int.parse(input) && int.parse(e.split("-")[0]) == currentDate.month) {
+            //   return "満";
+            // }
           }
         }
       }

@@ -59,7 +59,6 @@ class _SubGoodsPageState extends State<SubGoodsPage>
   // 不可预约日
   List<String> unableDays = [];
 
- 
   List restWeekDay = [];
 
   @override
@@ -93,10 +92,12 @@ class _SubGoodsPageState extends State<SubGoodsPage>
   }
 
   getWeek() {
-    backEndRepository.doGet('${Constant.getRestWeekDay}/${widget.map[Constant.FLAG]}', successRequest: (res) {
+    backEndRepository
+        .doGet('${Constant.getRestWeekDay}/${widget.map[Constant.FLAG]}',
+            successRequest: (res) {
       setState(() {
         _date.value = res['data']["firstDay"];
-        restWeekDay = res["data"]["calendarList"]??"";
+        restWeekDay = res["data"]["calendarList"] ?? "";
       });
       getData([], _date.value);
     });
@@ -109,8 +110,7 @@ class _SubGoodsPageState extends State<SubGoodsPage>
       "kindIdList": list
     }, successRequest: (res) {
       mData = GoodsModel.fromJson(res).data;
-      getcancelData(
-          _date.value.substring(0, 4), _date.value.substring(5, 7));
+      getcancelData(_date.value.substring(0, 4), _date.value.substring(5, 7));
 
       tempData = mData;
       price.value = 0;
@@ -123,11 +123,12 @@ class _SubGoodsPageState extends State<SubGoodsPage>
     });
   }
 
-  getcancelData(String dataYear,String dataMonth) {
+  getcancelData(String dataYear, String dataMonth) {
     Map cancelDataMap = {};
-    if(restWeekDay.isNotEmpty){
+    if (restWeekDay.isNotEmpty) {
       for (var data in restWeekDay) {
-        if('${data["month"]??""}' == dataMonth&&dataYear == '${data["year"]??""}'){
+        if ((data["month"] ?? 0) == int.tryParse(dataMonth) &&
+            '${data["year"] ?? 0}' == dataYear) {
           cancelDataMap = data;
         }
       }
@@ -141,9 +142,7 @@ class _SubGoodsPageState extends State<SubGoodsPage>
             .forEach((e) => mDatesData.add(int.parse(e.toString()).toString()));
       }
       if (cancelDataMap["stopDays"].length != 0) {
-        cancelDataMap["stopDays"].forEach((e) => mOrderDatesList.add(
-            int.parse(e.toString().substring(8, e.toString().length))
-                .toString()));
+        cancelDataMap["stopDays"].forEach((e) => mOrderDatesList.add(int.parse(e.toString()).toString()));
       }
       if (cancelDataMap["unableDays"].length != 0) {
         cancelDataMap["unableDays"].forEach(
@@ -452,6 +451,8 @@ class _SubGoodsPageState extends State<SubGoodsPage>
                   mDates: mDates.toSet().toList(),
                   mOrderDates: mOrderDates,
                   unableDays: unableDays,
+                  minMonth: restWeekDay[0]["month"] ?? 0,
+                  maxMonth: restWeekDay[1]["month"] ?? 0,
                   spaceBetweenMovingArrow: 40,
                   closedDatesColor: Colors.white.withOpacity(0.7),
                   showHeader: true,
@@ -464,10 +465,10 @@ class _SubGoodsPageState extends State<SubGoodsPage>
                   currentDayBorder: Border.all(color: CustomColor.redE8),
                   duration: const Duration(milliseconds: 200),
                   //onDatesUpdated: (date) => [Date(date: DateTime.parse(_date.value))],
-                  onChange: (year, month) =>
-                      getcancelData(year, month),
-                  onDayTapped: (date) =>
-                      _date.value = date.toString().substring(0, 10)));
+                  onChange: (year, month) => getcancelData(year, month),
+                  onDayTapped: (date) {
+                      _date.value = date.toString().substring(0, 10);
+                  }));
         }));
   }
 
