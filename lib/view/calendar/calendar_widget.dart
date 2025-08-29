@@ -477,6 +477,9 @@ class _CustomCalendarViewerState extends State<CustomCalendarViewer>
 
   @override
   Widget build(BuildContext context) {
+    print("000----------------------${widget.mDates}");
+    print("000----------------------${widget.mOrderDates}");
+    print("000----------------------${widget.unableDays}");
     int addMonth = 0;
     DateTime firstDayOfNextMonth =
         DateTime(currentDate.year, currentDate.month + (addMonth + 1), 1);

@@ -98,6 +98,7 @@ class _SubGoodsPageState extends State<SubGoodsPage>
       setState(() {
         _date.value = res['data']["firstDay"];
         restWeekDay = res["data"]["calendarList"] ?? "";
+        print("restWeekDay ------------------ $restWeekDay");
       });
       getData([], _date.value);
     });
@@ -123,7 +124,7 @@ class _SubGoodsPageState extends State<SubGoodsPage>
     });
   }
 
-  getcancelData(String dataYear, String dataMonth) {
+  getcancelData(String dataYear, String dataMonth) async{
     Map cancelDataMap = {};
     if (restWeekDay.isNotEmpty) {
       for (var data in restWeekDay) {
@@ -149,11 +150,17 @@ class _SubGoodsPageState extends State<SubGoodsPage>
             (e) => unableDaysData.add(int.parse(e.toString()).toString()));
       }
     }
-    setState(() {
-      mDates = mDatesData;
-      mOrderDates = mOrderDatesList;
-      unableDays = unableDaysData;
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+  setState(() {
+    mDates = mDatesData;
+    mOrderDates = mOrderDatesList;
+    unableDays = unableDaysData;
+  });
+});
+
+    print("mDates ------------------ $mDates");
+    print("mOrderDates ------------------ $mOrderDates");
+    print("unableDays ------------------ $unableDays");
   }
 
   @override
@@ -194,7 +201,9 @@ class _SubGoodsPageState extends State<SubGoodsPage>
                               const Icon(Icons.arrow_drop_down_sharp,
                                   color: CustomColor.white)
                             ]),
-                            onTap: () => showCalendar()),
+                            onTap: () {
+                              // getcancelData("${restWeekDay[0]["year"]}", "${restWeekDay[0]["month"]}");
+                            showCalendar();}),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -441,6 +450,7 @@ class _SubGoodsPageState extends State<SubGoodsPage>
               height: 390,
               width: utils.getScreenSize.width,
               child: CustomCalendarViewer(
+                  key: UniqueKey(),
                   initDate: _date.value,
                   calendarType: CustomCalendarType.date,
                   calendarStyle: CustomCalendarStyle.normal,
@@ -465,7 +475,7 @@ class _SubGoodsPageState extends State<SubGoodsPage>
                   currentDayBorder: Border.all(color: CustomColor.redE8),
                   duration: const Duration(milliseconds: 200),
                   //onDatesUpdated: (date) => [Date(date: DateTime.parse(_date.value))],
-                  onChange: (year, month) => getcancelData(year, month),
+                  onChange: (year, month) =>  getcancelData(year, month),
                   onDayTapped: (date) {
                       _date.value = date.toString().substring(0, 10);
                   }));
