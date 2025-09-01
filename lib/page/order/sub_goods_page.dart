@@ -441,8 +441,18 @@ class _SubGoodsPageState extends State<SubGoodsPage>
 
   showCalendar() {
     customWidget.showCustomNoTitleDialog(context, confirm: () {
-      _date.value = _dateCopy;
+      bool isallow= true;
+      for (var data in unableDays) {
+        if(int.parse(data)==DateTime.parse(_dateCopy).day){
+          isallow = false;
+        }
+      }
+      if(isallow){
+        _date.value = _dateCopy;
       getData([], _date.value);
+      }else{
+        return;
+      }
     }, child: StatefulBuilder(builder: (_, state) {
       return SizedBox(
           height: 390,
