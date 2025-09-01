@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   List<LatLng> latlongPoint = [];
   double latitude = 35.82046850;
   double longitude = 139.77565940;
+  final RxInt clickCount = 0.obs;
 
   @override
   void initState() {
@@ -249,19 +250,22 @@ class _HomePageState extends State<HomePage> {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          final id = infoData.id;
+                          debounce(clickCount, (_) async {
+                            final id = infoData.id;
                           final res = await backEndRepository
                               .doGetAsync("${Constant.psMerchantDetail}$id");
 
                           final shopDetailModel =
                               ShopDetailModel.fromJson(res['data']);
-
+                          
                           if (context.mounted) {
                             Routes.goPage(context, "/GoodsListPage", param: {
                               Constant.FLAG: id,
                               'shopDetailModel': shopDetailModel
                             });
                           }
+                          });
+                          
                         },
                         child: Container(
                           width: Get.width - 60 - 80 - 15,
