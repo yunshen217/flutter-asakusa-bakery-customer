@@ -26,18 +26,84 @@ class _HomePageState extends State<HomePage> {
   Key _mapKey = UniqueKey();
 
   List<CustomerMerchantsModelRecords?> customerMerchantsModelRecords = [];
+  late GoogleMapController _mapController;
+
   // 坐标
   List<LatLng> latlongPoint = [];
   double latitude = 35.82046850;
   double longitude = 139.77565940;
   final RxInt clickCount = 0.obs;
+  String merchantName = "";
+  final Rx<LatLngBounds?> _bounds = Rx<LatLngBounds?>(null);
 
   @override
   void initState() {
-    getData("");
+    getData();
     getUncheckNotice();
-
+    debounce(
+      clickCount,
+      (_) async => _fetchDetail(),
+      time: const Duration(milliseconds: 500),
+    );
+    debounce(
+      _bounds,
+      (_) async => _fetchMapdata(),
+      time: const Duration(milliseconds: 2000),
+    );
     super.initState();
+  }
+
+  _fetchMapdata() async {
+    // ignore: unnecessary_null_comparison
+    if (_mapController == null) return;
+    final bounds = await _mapController.getVisibleRegion();
+
+    final double minLat = bounds.southwest.latitude; // 南边界
+    final double maxLat = bounds.northeast.latitude; // 北边界
+    final double minLng = bounds.southwest.longitude; // 西边界
+    final double maxLng = bounds.northeast.longitude; // 东边界
+
+    backEndRepository.doPost(Constant.homes, params: {
+      "latitude": latitude,
+      "longitude": longitude,
+      "merchantName": merchantName,
+      "pageNum": Constant.FLAG_ONE,
+      "minLat": minLat,
+      "maxLat": maxLat,
+      "minLng": minLng,
+      "maxLng": maxLng
+    }, successRequest: (res) {
+      CustomerMerchantsModel customerMerchants =
+          CustomerMerchantsModel.fromJson(res["data"] ?? {});
+      List<LatLng> latlongPointData = [];
+      for (var data in customerMerchants.records!) {
+        latlongPointData.add(LatLng(
+            double.parse(data!.latitude!), double.parse(data.longitude!)));
+      }
+      setState(() {
+        customerMerchantsModelRecords = customerMerchants.records!;
+        latlongPoint = latlongPointData;
+      });
+      _loadIcon();
+    });
+  }
+
+  _fetchDetail() async {
+    final id = infoData.id;
+    final res =
+        await backEndRepository.doGetAsync("${Constant.psMerchantDetail}$id");
+
+    final shopDetailModel = ShopDetailModel.fromJson(res['data']);
+
+    if (context.mounted) {
+      Routes.goPage(context, "/GoodsListPage",
+          param: {Constant.FLAG: id, 'shopDetailModel': shopDetailModel});
+    }
+  }
+
+  Future<void> _onCameraIdle() async {
+    final bounds = await _mapController.getVisibleRegion();
+    _bounds.value = bounds;
   }
 
   void getUncheckNotice() {
@@ -59,7 +125,7 @@ class _HomePageState extends State<HomePage> {
         successRequest: (res) {});
   }
 
-  Future<void> getData(merchantName) async {
+  Future<void> getData() async {
     bool enabled = await Geolocator.isLocationServiceEnabled();
     if (!enabled) return Future.error('位置情報の利用を許可しましょう現在地周辺のパン屋さんを検索できます。');
 
@@ -81,25 +147,7 @@ class _HomePageState extends State<HomePage> {
       longitude = pos.longitude;
       _mapKey = UniqueKey();
     });
-    backEndRepository.doPost(Constant.homes, params: {
-      "latitude": latitude,
-      "longitude": longitude,
-      "merchantName": merchantName,
-      "pageNum": Constant.FLAG_ONE,
-    }, successRequest: (res) {
-      CustomerMerchantsModel customerMerchants =
-          CustomerMerchantsModel.fromJson(res["data"] ?? {});
-      List<LatLng> latlongPointData = [];
-      for (var data in customerMerchants.records!) {
-        latlongPointData.add(LatLng(
-            double.parse(data!.latitude!), double.parse(data.longitude!)));
-      }
-      setState(() {
-        customerMerchantsModelRecords = customerMerchants.records!;
-        latlongPoint = latlongPointData;
-      });
-      _loadIcon();
-    });
+    _onCameraIdle();
   }
 
   // marker数据
@@ -150,19 +198,27 @@ class _HomePageState extends State<HomePage> {
           isLeftShow: false,
           isTitle: false,
           backgroundColor: Colors.transparent,
-          titleChild: customWidget.setTextFieldForLogin(controller,
-              hintText: "店舗名を入力してください",
-              textInputAction: TextInputAction.search,
-              icon: "icon_search.png",
-              isFilled: true,
-              isHaveBorder: false,
-              onTap: () {
-                if (controller!.text.trim().isNotEmpty) {
-                  getData("");
-                }
-              },
-              onChanged: (e) => getData(e),
-              onSubmitted: (e) => getData(e)),
+          titleChild: customWidget.setTextFieldForLogin(
+            controller,
+            hintText: "店舗名を入力してください",
+            textInputAction: TextInputAction.search,
+            icon: "icon_search.png",
+            isFilled: true,
+            isHaveBorder: false,
+            onTap: () {
+              if (controller!.text.trim().isNotEmpty) {
+                getData();
+              }
+            },
+            onChanged: (e) {
+              merchantName = e;
+              getData();
+            },
+            onSubmitted: (e) {
+              merchantName = e;
+              getData();
+            },
+          ),
           isRightShow: true,
           right: Container(
               padding:
@@ -186,6 +242,8 @@ class _HomePageState extends State<HomePage> {
             zoomControlsEnabled: false, // 隐藏缩放按钮（+ -）
             myLocationButtonEnabled: false,
             mapToolbarEnabled: false,
+            onMapCreated: (c) => _mapController = c,
+            onCameraIdle: _onCameraIdle,
             markers: markers,
             onTap: (argument) => setState(() {
               infoData = CustomerMerchantsModelRecords.fromJson({});
@@ -198,8 +256,9 @@ class _HomePageState extends State<HomePage> {
                   onTap: () async {
                     setState(() {
                       infoData = CustomerMerchantsModelRecords.fromJson({});
+                      merchantName = "";
                     });
-                    getData("");
+                    getData();
                   },
                   child: Container(
                     width: Get.width,
@@ -249,24 +308,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () async {
-                          debounce(clickCount, (_) async {
-                            final id = infoData.id;
-                          final res = await backEndRepository
-                              .doGetAsync("${Constant.psMerchantDetail}$id");
-
-                          final shopDetailModel =
-                              ShopDetailModel.fromJson(res['data']);
-                          
-                          if (context.mounted) {
-                            Routes.goPage(context, "/GoodsListPage", param: {
-                              Constant.FLAG: id,
-                              'shopDetailModel': shopDetailModel
-                            });
-                          }
-                          });
-                          
-                        },
+                        onTap: () => clickCount.value++,
                         child: Container(
                           width: Get.width - 60 - 80 - 15,
                           margin: const EdgeInsets.only(left: 15),
