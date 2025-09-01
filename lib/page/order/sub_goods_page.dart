@@ -46,6 +46,7 @@ class _SubGoodsPageState extends State<SubGoodsPage>
   List<GoodModel>? datas;
   List<ItemKindVo>? itemKindModel;
   final RxString _date = utils.formatDate(utils.getCurrentDate()).obs;
+  String _dateCopy = utils.formatDate(utils.getCurrentDate());
   RxBool isCheck = false.obs;
   int customerOrderLimit = 0;
   @override
@@ -53,11 +54,11 @@ class _SubGoodsPageState extends State<SubGoodsPage>
 
   // final RxString _tempDate = utils.formatDate(utils.getCurrentDate()).obs;
   // 休息日
-  List<String> mDates = [];
+  RxList<String> mDates = <String>[].obs;
   // 订满日
-  List<String> mOrderDates = [];
+  RxList<String> mOrderDates = <String>[].obs;
   // 不可预约日
-  List<String> unableDays = [];
+  RxList<String> unableDays = <String>[].obs;
 
   List restWeekDay = [];
 
@@ -96,9 +97,10 @@ class _SubGoodsPageState extends State<SubGoodsPage>
         .doGet('${Constant.getRestWeekDay}/${widget.map[Constant.FLAG]}',
             successRequest: (res) {
       setState(() {
-        _date.value = res['data']["firstDay"];
+        final raw = res['data']["firstDay"];
+        _date.value = raw;
+        _dateCopy = String.fromCharCodes(raw.runes);
         restWeekDay = res["data"]["calendarList"] ?? "";
-        print("restWeekDay ------------------ $restWeekDay");
       });
       getData([], _date.value);
     });
@@ -112,7 +114,6 @@ class _SubGoodsPageState extends State<SubGoodsPage>
     }, successRequest: (res) {
       mData = GoodsModel.fromJson(res).data;
       getcancelData(_date.value.substring(0, 4), _date.value.substring(5, 7));
-
       tempData = mData;
       price.value = 0;
       if (cartKey.currentState != null) {
@@ -124,7 +125,9 @@ class _SubGoodsPageState extends State<SubGoodsPage>
     });
   }
 
-  getcancelData(String dataYear, String dataMonth) async{
+  String trimLeadingZero(String src) => (int.tryParse(src) ?? 0).toString();
+
+  getcancelData(String dataYear, String dataMonth) async {
     Map cancelDataMap = {};
     if (restWeekDay.isNotEmpty) {
       for (var data in restWeekDay) {
@@ -143,24 +146,17 @@ class _SubGoodsPageState extends State<SubGoodsPage>
             .forEach((e) => mDatesData.add(int.parse(e.toString()).toString()));
       }
       if (cancelDataMap["stopDays"].length != 0) {
-        cancelDataMap["stopDays"].forEach((e) => mOrderDatesList.add(int.parse(e.toString()).toString()));
+        cancelDataMap["stopDays"].forEach(
+            (e) => mOrderDatesList.add(int.parse(e.toString()).toString()));
       }
       if (cancelDataMap["unableDays"].length != 0) {
         cancelDataMap["unableDays"].forEach(
             (e) => unableDaysData.add(int.parse(e.toString()).toString()));
       }
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-  setState(() {
-    mDates = mDatesData;
-    mOrderDates = mOrderDatesList;
-    unableDays = unableDaysData;
-  });
-});
-
-    print("mDates ------------------ $mDates");
-    print("mOrderDates ------------------ $mOrderDates");
-    print("unableDays ------------------ $unableDays");
+    mDates.value = mDatesData;
+    mOrderDates.value = mOrderDatesList;
+    unableDays.value = unableDaysData;
   }
 
   @override
@@ -203,7 +199,8 @@ class _SubGoodsPageState extends State<SubGoodsPage>
                             ]),
                             onTap: () {
                               // getcancelData("${restWeekDay[0]["year"]}", "${restWeekDay[0]["month"]}");
-                            showCalendar();}),
+                              showCalendar();
+                            }),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -443,43 +440,48 @@ class _SubGoodsPageState extends State<SubGoodsPage>
   }
 
   showCalendar() {
-    customWidget.showCustomNoTitleDialog(context,
-        confirm: () => getData([], _date.value),
-        child: StatefulBuilder(builder: (_, state) {
-          return SizedBox(
-              height: 390,
-              width: utils.getScreenSize.width,
-              child: CustomCalendarViewer(
-                  key: UniqueKey(),
-                  initDate: _date.value,
-                  calendarType: CustomCalendarType.date,
-                  calendarStyle: CustomCalendarStyle.normal,
-                  animateDirection: CustomCalendarAnimatedDirection.horizontal,
-                  movingArrowSize: 15,
-                  local: "jp",
-                  showCurrentDayBorder: true,
-                  mDates: mDates.toSet().toList(),
-                  mOrderDates: mOrderDates,
-                  unableDays: unableDays,
-                  minMonth: restWeekDay[0]["month"] ?? 0,
-                  maxMonth: restWeekDay[1]["month"] ?? 0,
-                  spaceBetweenMovingArrow: 40,
-                  closedDatesColor: Colors.white.withOpacity(0.7),
-                  showHeader: true,
-                  daysMargin: const EdgeInsets.only(
-                      left: 10, right: 10, top: 0, bottom: 0),
-                  showBorderAfterDayHeader: false,
-                  headerAlignment: MainAxisAlignment.spaceEvenly,
-                  calendarStartDay: CustomCalendarStartDay.sunday,
-                  activeColor: CustomColor.redE8,
-                  currentDayBorder: Border.all(color: CustomColor.redE8),
-                  duration: const Duration(milliseconds: 200),
-                  //onDatesUpdated: (date) => [Date(date: DateTime.parse(_date.value))],
-                  onChange: (year, month) =>  getcancelData(year, month),
-                  onDayTapped: (date) {
-                      _date.value = date.toString().substring(0, 10);
-                  }));
-        }));
+    customWidget.showCustomNoTitleDialog(context, confirm: () {
+      _date.value = _dateCopy;
+      getData([], _date.value);
+    }, child: StatefulBuilder(builder: (_, state) {
+      return SizedBox(
+          height: 390,
+          width: utils.getScreenSize.width,
+          child: Obx(() => CustomCalendarViewer(
+              key: UniqueKey(),
+              initDate: _dateCopy,
+              calendarType: CustomCalendarType.date,
+              calendarStyle: CustomCalendarStyle.normal,
+              animateDirection: CustomCalendarAnimatedDirection.horizontal,
+              movingArrowSize: 15,
+              local: "jp",
+              showCurrentDayBorder: true,
+              mDates: mDates.toSet().toList(),
+              mOrderDates: mOrderDates.value,
+              unableDays: unableDays.value,
+              minMonth: restWeekDay[0]["month"] ?? 0,
+              maxMonth: restWeekDay[1]["month"] ?? 0,
+              spaceBetweenMovingArrow: 40,
+              closedDatesColor: Colors.white.withOpacity(0.7),
+              showHeader: true,
+              daysMargin:
+                  const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+              showBorderAfterDayHeader: false,
+              headerAlignment: MainAxisAlignment.spaceEvenly,
+              calendarStartDay: CustomCalendarStartDay.sunday,
+              activeColor: CustomColor.redE8,
+              currentDayBorder: Border.all(color: Colors.transparent),
+              duration: const Duration(milliseconds: 200),
+              //onDatesUpdated: (date) => [Date(date: DateTime.parse(_date.value))],
+              onChange: (year, month) {
+                _dateCopy = utils.formatDate(
+                    DateTime(int.parse(year), int.parse(month)).toString());
+                getcancelData(year, month);
+              },
+              onDayTapped: (date) {
+                setState(() => _dateCopy = date.toString().substring(0, 10));
+              })));
+    }));
   }
 
   void buildModalBottomSheet(context) {
