@@ -474,8 +474,12 @@ class _SubGoodsPageState extends State<SubGoodsPage>
               duration: const Duration(milliseconds: 200),
               //onDatesUpdated: (date) => [Date(date: DateTime.parse(_date.value))],
               onChange: (year, month) {
-                _dateCopy = utils.formatDate(
+                if(_date.value.substring(0, 4)==year&& int.parse(_date.value.substring(5, 7))==int.parse(month)){
+                  _dateCopy = _date.value;
+                }else{
+                  _dateCopy = utils.formatDate(
                     DateTime(int.parse(year), int.parse(month)).toString());
+                }
                 getcancelData(year, month);
               },
               onDayTapped: (date) {

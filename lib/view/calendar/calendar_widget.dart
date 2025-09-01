@@ -1691,7 +1691,10 @@ class _CustomCalendarViewerState extends State<CustomCalendarViewer>
                         widget.showCurrentDayBorder)
                     ? widget.currentDayBorder ?? Border.all(color: Colors.blue)
                     : widget.dayBorder,
-                color: inRange[0] == -1
+                color:widget.unableDays!
+                            .contains(convertToArOrEnNumerals('${(index + 1) - extraDays}'))||
+                        convertToArOrEnNumerals('${(index + 1) - extraDays}') == "休" ||
+                        convertToArOrEnNumerals('${(index + 1) - extraDays}') == "満"?Colors.transparent: inRange[0] == -1
                     ? (dateIndex != -1
                         ? (dates == null || dates![dateIndex].color == null)
                             ? widget.activeColor
